@@ -1,11 +1,13 @@
 <Window x:Class="TeraCyteViewer.Views.HistoryWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:TeraCyteViewer.Views"
         Title="Image History" Height="700" Width="1100"
         WindowStartupLocation="CenterScreen"
         Background="#F5F5F5">
     
     <Window.Resources>
+        <local:ClassificationColorConverter x:Key="ClassificationColorConverter"/>
         <Style x:Key="HistoryItemStyle" TargetType="Border">
             <Setter Property="Background" Value="White"/>
             <Setter Property="CornerRadius" Value="8"/>
@@ -106,8 +108,9 @@
                                         
                                         <StackPanel Grid.Column="2">
                                             <TextBlock Text="Classification" FontWeight="SemiBold" FontSize="12" Foreground="#666666"/>
-                                            <TextBlock Text="{Binding Results.ClassificationLabel}" 
-                                                       FontSize="14" FontWeight="Bold" Foreground="#D32F2F"/>
+                                            <TextBlock Text="{Binding Results.ClassificationLabel}"
+                                                       FontSize="14" FontWeight="Bold"
+                                                       Foreground="{Binding Results.ClassificationLabel, Converter={StaticResource ClassificationColorConverter}}"/>
                                         </StackPanel>
                                     </Grid>
                                 </StackPanel>
