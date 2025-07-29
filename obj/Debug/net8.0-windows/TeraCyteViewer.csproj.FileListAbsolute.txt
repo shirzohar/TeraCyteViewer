@@ -1,0 +1,78 @@
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.csproj.AssemblyReference.cache
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\MainWindow.g.cs
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\App.g.cs
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer_MarkupCompile.cache
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\TeraCyteViewer.exe
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\TeraCyteViewer.deps.json
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\TeraCyteViewer.runtimeconfig.json
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\TeraCyteViewer.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\TeraCyteViewer.pdb
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\Newtonsoft.Json.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\MainWindow.baml
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.g.resources
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.AssemblyInfoInputs.cache
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.AssemblyInfo.cs
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.csproj.CoreCompileInputs.cache
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyte.CF067A67.Up2Date
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\refint\TeraCyteViewer.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.pdb
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.genruntimeconfig.cache
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\ref\TeraCyteViewer.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\HarfBuzzSharp.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\LiveChartsCore.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\LiveChartsCore.SkiaSharpView.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\LiveChartsCore.SkiaSharpView.WPF.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\SkiaSharp.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\SkiaSharp.HarfBuzz.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\SkiaSharp.Views.Desktop.Common.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\SkiaSharp.Views.WPF.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\runtimes\osx\native\libHarfBuzzSharp.dylib
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\runtimes\win-arm64\native\libHarfBuzzSharp.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\runtimes\win-x64\native\libHarfBuzzSharp.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\runtimes\win-x86\native\libHarfBuzzSharp.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\runtimes\osx\native\libSkiaSharp.dylib
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\runtimes\win-arm64\native\libSkiaSharp.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\runtimes\win-x64\native\libSkiaSharp.dll
+C:\Users\shir3\source\repos\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\runtimes\win-x86\native\libSkiaSharp.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\TeraCyteViewer.exe
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\TeraCyteViewer.deps.json
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\TeraCyteViewer.runtimeconfig.json
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\TeraCyteViewer.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\TeraCyteViewer.pdb
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\HarfBuzzSharp.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\LiveChartsCore.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\LiveChartsCore.SkiaSharpView.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\LiveChartsCore.SkiaSharpView.WPF.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\Newtonsoft.Json.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\SkiaSharp.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\SkiaSharp.HarfBuzz.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\SkiaSharp.Views.Desktop.Common.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\SkiaSharp.Views.WPF.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\runtimes\osx\native\libHarfBuzzSharp.dylib
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\runtimes\win-arm64\native\libHarfBuzzSharp.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\runtimes\win-x64\native\libHarfBuzzSharp.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\runtimes\win-x86\native\libHarfBuzzSharp.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\runtimes\osx\native\libSkiaSharp.dylib
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\runtimes\win-arm64\native\libSkiaSharp.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\runtimes\win-x64\native\libSkiaSharp.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\runtimes\win-x86\native\libSkiaSharp.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.csproj.AssemblyReference.cache
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\MainWindow.baml
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\Views\HistoryWindow.baml
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\MainWindow.g.cs
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\Views\HistoryWindow.g.cs
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\App.g.cs
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer_MarkupCompile.cache
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.g.resources
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.AssemblyInfoInputs.cache
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.AssemblyInfo.cs
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.csproj.CoreCompileInputs.cache
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyte.CF067A67.Up2Date
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\refint\TeraCyteViewer.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.pdb
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.genruntimeconfig.cache
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\ref\TeraCyteViewer.dll
