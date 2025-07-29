@@ -7,6 +7,8 @@
         Background="#F5F5F5">
     
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        
         <Style x:Key="StatusTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="Medium"/>
@@ -43,6 +45,24 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#1565C0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style x:Key="StopButtonStyle" TargetType="Button" BasedOn="{StaticResource HistoryButtonStyle}">
+            <Setter Property="Background" Value="#D32F2F"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#B71C1C"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style x:Key="RefreshButtonStyle" TargetType="Button" BasedOn="{StaticResource HistoryButtonStyle}">
+            <Setter Property="Background" Value="#FF9800"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#F57C00"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -93,7 +113,7 @@
                     <Grid>
                         <TextBlock x:Name="StatusText"
                                    Style="{StaticResource StatusTextStyle}"
-                                   Text="Initializing..." />
+                                   Text="{Binding StatusMessage}" />
 
                         <!-- New data indicator -->
                         <Border x:Name="NewDataIndicator"
@@ -110,13 +130,34 @@
                                        FontWeight="Bold"/>
                         </Border>
                     </Grid>
+                    
+                    <!-- Control buttons -->
+                    <StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Center" 
+                                Margin="0,10,0,0">
+                        <Button Content="▶️ Start Monitoring"
+                                Command="{Binding StartMonitoringCommand}"
+                                Style="{StaticResource HistoryButtonStyle}"
+                                Margin="0,0,10,0"
+                                Padding="15,8"/>
+                        <Button Content="⏹️ Stop Monitoring"
+                                Command="{Binding StopMonitoringCommand}"
+                                Style="{StaticResource StopButtonStyle}"
+                                Margin="0,0,10,0"
+                                Padding="15,8"/>
+                        <Button Content="🔄 Refresh"
+                                Command="{Binding RefreshCommand}"
+                                Style="{StaticResource RefreshButtonStyle}"
+                                Margin="0,0,10,0"
+                                Padding="15,8"/>
+                    </StackPanel>
                 </StackPanel>
                 
                 <Button Grid.Column="1" 
                         x:Name="HistoryButton"
                         Content="📚 History"
                         Style="{StaticResource HistoryButtonStyle}"
-                        Click="HistoryButton_Click"
+                        Command="{Binding ShowHistoryCommand}"
                         VerticalAlignment="Center"/>
             </Grid>
         </Border>
@@ -146,12 +187,13 @@
                             <Image x:Name="MicroscopeImage"
                                    Height="400"
                                    Stretch="Uniform"
-                                   RenderOptions.BitmapScalingMode="HighQuality"/>
+                                   RenderOptions.BitmapScalingMode="HighQuality"
+                                   Source="{Binding CurrentImage}"/>
                             
                             <!-- Loading overlay -->
                             <Border x:Name="ImageLoadingOverlay"
                                     Background="#80000000"
-                                    Visibility="Visible">
+                                    Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <StackPanel HorizontalAlignment="Center" 
                                             VerticalAlignment="Center">
                                     <TextBlock Text="🔄 Loading..." 
@@ -169,7 +211,7 @@
                     </Border>
                     
                     <TextBlock x:Name="ImageInfoText"
-                               Text="No image loaded" 
+                               Text="{Binding ImageInfo}" 
                                FontSize="12" 
                                Foreground="#666666"
                                TextAlignment="Center"
@@ -193,7 +235,7 @@
                                        FontSize="12" 
                                        Foreground="#666666"/>
                             <TextBlock x:Name="IntensityText"
-                                       Text="0.00" 
+                                       Text="{Binding IntensityAverage, StringFormat=F2}" 
                                        FontSize="24" 
                                        FontWeight="Bold" 
                                        Foreground="#2E7D32"/>
@@ -206,7 +248,7 @@
                                        FontSize="12" 
                                        Foreground="#666666"/>
                             <TextBlock x:Name="FocusText"
-                                       Text="0.00" 
+                                       Text="{Binding FocusScore, StringFormat=F2}" 
                                        FontSize="24" 
                                        FontWeight="Bold" 
                                        Foreground="#1976D2"/>
@@ -219,10 +261,10 @@
                                        FontSize="12" 
                                        Foreground="#666666"/>
                             <TextBlock x:Name="ClassificationText"
-                                       Text="Unknown" 
+                                       Text="{Binding ClassificationLabel}" 
                                        FontSize="24" 
                                        FontWeight="Bold" 
-                                       Foreground="#D32F2F"/>
+                                       Foreground="{Binding ClassificationColor}"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
@@ -242,7 +284,8 @@
                         Background="#FAFAFA" Padding="10" Margin="0,0,0,15">
                     <lvc:CartesianChart x:Name="HistogramChart"
                                         Height="200"
-                                        Margin="0,5,0,0"/>
+                                        Margin="0,5,0,0"
+                                        Series="{Binding HistogramSeries}"/>
                 </Border>
                 
                 <!-- Statistics below chart -->
@@ -270,7 +313,7 @@
                                        Foreground="#666666"
                                        HorizontalAlignment="Center"/>
                             <TextBlock x:Name="TotalValuesText"
-                                       Text="256" 
+                                       Text="{Binding TotalValues}" 
                                        FontSize="16" 
                                        FontWeight="Bold"
                                        Foreground="#2E7D32"
@@ -283,7 +326,7 @@
                                        Foreground="#666666"
                                        HorizontalAlignment="Center"/>
                             <TextBlock x:Name="MaxValueText"
-                                       Text="0" 
+                                       Text="{Binding MaxValue}" 
                                        FontSize="16" 
                                        FontWeight="Bold"
                                        Foreground="#D32F2F"
@@ -296,7 +339,7 @@
                                        Foreground="#666666"
                                        HorizontalAlignment="Center"/>
                             <TextBlock x:Name="AverageText"
-                                       Text="0.0" 
+                                       Text="{Binding AverageValue}" 
                                        FontSize="16" 
                                        FontWeight="Bold"
                                        Foreground="#1976D2"
@@ -309,7 +352,7 @@
                                        Foreground="#666666"
                                        HorizontalAlignment="Center"/>
                             <TextBlock x:Name="NonZeroText"
-                                       Text="0" 
+                                       Text="{Binding NonZeroCount}" 
                                        FontSize="16" 
                                        FontWeight="Bold"
                                        Foreground="#FF9800"
