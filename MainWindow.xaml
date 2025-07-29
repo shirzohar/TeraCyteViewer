@@ -115,6 +115,15 @@
                                    Style="{StaticResource StatusTextStyle}"
                                    Text="{Binding StatusMessage}" />
 
+                        <!-- Validation message -->
+                        <TextBlock x:Name="ValidationText"
+                                   Style="{StaticResource StatusTextStyle}"
+                                   Text="{Binding ValidationMessage}"
+                                   Foreground="Red"
+                                   Visibility="{Binding HasErrors, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                   HorizontalAlignment="Right"
+                                   Margin="0,0,10,0"/>
+
                         <!-- New data indicator -->
                         <Border x:Name="NewDataIndicator"
                                 Background="#4CAF50"
@@ -359,6 +368,31 @@
                                        HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Grid>
+                </StackPanel>
+
+                <!-- Error List -->
+                <StackPanel x:Name="ErrorList"
+                            HorizontalAlignment="Center"
+                            Visibility="{Binding HasErrors, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Margin="0,15,0,0">
+                    <TextBlock Text="⚠️ Current Errors"
+                               FontSize="14" 
+                               FontWeight="SemiBold"
+                               Foreground="#D32F2F"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,10"/>
+                    
+                    <ItemsControl ItemsSource="{Binding Errors}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}"
+                                           FontSize="12"
+                                           Foreground="#D32F2F"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,2"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </StackPanel>
             </StackPanel>
         </Border>

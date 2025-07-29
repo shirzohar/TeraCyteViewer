@@ -10,6 +10,8 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System.Linq;
+using System.Windows.Input; // Added for CommandManager
+using System.Collections.Generic; // Added for List
 
 namespace TeraCyteViewer.ViewModels
 {
@@ -41,6 +43,11 @@ namespace TeraCyteViewer.ViewModels
         private string _averageValue = "0.0";
         private string _nonZeroCount = "0";
 
+        // Validation properties
+        private bool _hasErrors = false;
+        private string _validationMessage = "";
+        private ObservableCollection<string> _errors = new ObservableCollection<string>();
+
         // Collections
         public ObservableCollection<HistoryItem> History { get; } = new ObservableCollection<HistoryItem>();
 
@@ -50,6 +57,25 @@ namespace TeraCyteViewer.ViewModels
         public RelayCommand ShowHistoryCommand { get; }
         public RelayCommand RefreshCommand { get; }
 
+        // Validation properties
+        public bool HasErrors
+        {
+            get => _hasErrors;
+            set => SetProperty(ref _hasErrors, value);
+        }
+
+        public string ValidationMessage
+        {
+            get => _validationMessage;
+            set => SetProperty(ref _validationMessage, value);
+        }
+
+        public ObservableCollection<string> Errors
+        {
+            get => _errors;
+            set => SetProperty(ref _errors, value);
+        }
+
         public MainViewModel()
         {
             // Initialize services
@@ -57,11 +83,11 @@ namespace TeraCyteViewer.ViewModels
             _imageService = new ImageService(_authService);
             _resultService = new ResultService(_authService);
 
-            // Initialize commands
-            StartMonitoringCommand = new RelayCommand(StartMonitoring, () => !IsRunning);
+            // Initialize commands with better CanExecute logic
+            StartMonitoringCommand = new RelayCommand(StartMonitoring, () => !IsRunning && IsAuthenticated);
             StopMonitoringCommand = new RelayCommand(StopMonitoring, () => IsRunning);
-            ShowHistoryCommand = new RelayCommand(ShowHistory);
-            RefreshCommand = new RelayCommand(RefreshData);
+            ShowHistoryCommand = new RelayCommand(ShowHistory, () => History.Count > 0);
+            RefreshCommand = new RelayCommand(RefreshData, () => IsAuthenticated && !IsLoading);
 
             // Start authentication
             _ = InitializeAsync();
@@ -121,6 +147,7 @@ namespace TeraCyteViewer.ViewModels
                     var imageData = await _imageService.GetLatestImageAsync();
                     if (imageData == null)
                     {
+                        AddError("No image data received during polling");
                         StatusMessage = "⚠️ No image data received";
                         StatusType = StatusType.Warning;
                         await Task.Delay(5000);
@@ -147,8 +174,7 @@ namespace TeraCyteViewer.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    StatusMessage = $"❌ Error during polling: {ex.Message}";
-                    StatusType = StatusType.Error;
+                    HandleException(ex, "Data polling");
                     await Task.Delay(10000); // Wait longer on error
                 }
             }
@@ -195,6 +221,9 @@ namespace TeraCyteViewer.ViewModels
             {
                 UpdateHistogram(result.Histogram.ToArray());
             }
+
+            // Validate the updated data
+            ValidateData();
         }
 
         private void UpdateHistogram(int[] histogram)
@@ -274,6 +303,9 @@ namespace TeraCyteViewer.ViewModels
             {
                 History.RemoveAt(History.Count - 1);
             }
+
+            // Refresh command states since history changed
+            RefreshCommandStates();
         }
 
         // Status properties
@@ -292,19 +324,37 @@ namespace TeraCyteViewer.ViewModels
         public bool IsLoading
         {
             get => _isLoading;
-            set => SetProperty(ref _isLoading, value);
+            set 
+            { 
+                if (SetProperty(ref _isLoading, value))
+                {
+                    RefreshCommandStates();
+                }
+            }
         }
 
         public bool IsAuthenticated
         {
             get => _isAuthenticated;
-            set => SetProperty(ref _isAuthenticated, value);
+            set 
+            { 
+                if (SetProperty(ref _isAuthenticated, value))
+                {
+                    RefreshCommandStates();
+                }
+            }
         }
 
         public bool IsRunning
         {
             get => _isRunning;
-            set => SetProperty(ref _isRunning, value);
+            set 
+            { 
+                if (SetProperty(ref _isRunning, value))
+                {
+                    RefreshCommandStates();
+                }
+            }
         }
 
         // Data properties
@@ -399,10 +449,75 @@ namespace TeraCyteViewer.ViewModels
             historyWindow.Show();
         }
 
+        // Helper method to refresh command states
+        private void RefreshCommandStates()
+        {
+            // Force command manager to re-evaluate CanExecute
+            CommandManager.InvalidateRequerySuggested();
+        }
+
+        // Validation method
+        private bool ValidateData()
+        {
+            var errors = new List<string>();
+
+            if (!IsAuthenticated)
+            {
+                errors.Add("Not authenticated");
+            }
+
+            if (CurrentImage == null)
+            {
+                errors.Add("No image loaded");
+            }
+
+            if (string.IsNullOrEmpty(ClassificationLabel))
+            {
+                errors.Add("No classification available");
+            }
+
+            if (HistogramSeries.Length == 0)
+            {
+                errors.Add("No histogram data");
+            }
+
+            HasErrors = errors.Count > 0;
+            ValidationMessage = errors.Count > 0 ? string.Join(", ", errors) : "";
+
+            return !HasErrors;
+        }
+
+        // Error handling methods
+        private void AddError(string error)
+        {
+            if (!Errors.Contains(error))
+            {
+                Errors.Add(error);
+                HasErrors = true;
+                ValidationMessage = string.Join(", ", Errors);
+            }
+        }
+
+        private void ClearErrors()
+        {
+            Errors.Clear();
+            HasErrors = false;
+            ValidationMessage = "";
+        }
+
+        private void HandleException(Exception ex, string operation)
+        {
+            var errorMessage = $"{operation} failed: {ex.Message}";
+            AddError(errorMessage);
+            StatusMessage = $"❌ {errorMessage}";
+            StatusType = StatusType.Error;
+        }
+
         private async void RefreshData()
         {
             try
             {
+                ClearErrors(); // Clear previous errors
                 StatusMessage = "🔄 Refreshing data...";
                 StatusType = StatusType.Info;
 
@@ -421,6 +536,7 @@ namespace TeraCyteViewer.ViewModels
                 var imageData = await _imageService.GetLatestImageAsync();
                 if (imageData == null)
                 {
+                    AddError("No image data received");
                     StatusMessage = "⚠️ No image data received";
                     StatusType = StatusType.Warning;
                     return;
@@ -437,14 +553,14 @@ namespace TeraCyteViewer.ViewModels
                 }
                 else
                 {
+                    AddError("No matching results found");
                     StatusMessage = "⚠️ No matching results found";
                     StatusType = StatusType.Warning;
                 }
             }
             catch (Exception ex)
             {
-                StatusMessage = $"❌ Refresh error: {ex.Message}";
-                StatusType = StatusType.Error;
+                HandleException(ex, "Data refresh");
             }
         }
     }
