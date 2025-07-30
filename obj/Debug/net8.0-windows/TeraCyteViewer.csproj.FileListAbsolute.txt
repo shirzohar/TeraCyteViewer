@@ -79,3 +79,5 @@ C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bi
 C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\TeraCyteViewer.pdb
 C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\TeraCyteViewer.genruntimeconfig.cache
 C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\obj\Debug\net8.0-windows\ref\TeraCyteViewer.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\bin\Debug\net8.0-windows\Microsoft.Extensions.DependencyInjection.Abstractions.dll

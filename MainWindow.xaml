@@ -172,7 +172,6 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 
                 <StackPanel Grid.Column="0">
@@ -225,34 +224,7 @@
                     </StackPanel>
                 </StackPanel>
                 
-                <!-- User Info -->
-                <Border Grid.Column="1" 
-                        Background="#F8F9FA" 
-                        CornerRadius="6" 
-                        Padding="10" 
-                        Margin="0,0,10,0"
-                        Visibility="{Binding CurrentUser, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <StackPanel>
-                        <TextBlock Text="👤 User Info" 
-                                   FontSize="12" 
-                                   FontWeight="SemiBold"
-                                   Foreground="#666666"
-                                   HorizontalAlignment="Center"/>
-                        <TextBlock Text="{Binding CurrentUser.Username}" 
-                                   FontSize="14" 
-                                   FontWeight="Bold"
-                                   Foreground="#1976D2"
-                                   HorizontalAlignment="Center"
-                                   Margin="0,2,0,0"/>
-                        <TextBlock Text="{Binding CurrentUser.Role}" 
-                                   FontSize="10" 
-                                   Foreground="#666666"
-                                   HorizontalAlignment="Center"
-                                   Margin="0,1,0,0"/>
-                    </StackPanel>
-                </Border>
-                
-                <Button Grid.Column="2" 
+                <Button Grid.Column="1" 
                         x:Name="HistoryButton"
                         Content="📚 History"
                         Style="{StaticResource HistoryButtonStyle}"
@@ -261,7 +233,7 @@
                         Margin="0,0,10,0"
                         Visibility="{Binding IsAuthenticated, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 
-                <Button Grid.Column="3" 
+                <Button Grid.Column="2" 
                         x:Name="LogoutButton"
                         Content="🚪 Logout"
                         Style="{StaticResource StopButtonStyle}"
@@ -269,7 +241,7 @@
                         VerticalAlignment="Center"
                         Visibility="{Binding IsAuthenticated, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 
-                <Button Grid.Column="2" 
+                <Button Grid.Column="1" 
                         x:Name="LoginButton"
                         Content="🔑 Login"
                         Style="{StaticResource HistoryButtonStyle}"
@@ -287,7 +259,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             
-            <!-- Top Row: Image and Results (הכי חשוב) -->
+                            <!-- Top Row: Image and Results -->
             <Grid Grid.Row="0" Margin="0,0,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.4*"/>
@@ -555,7 +527,7 @@
                 </Border>
             </Grid>
             
-            <!-- Bottom Row: Chart and Statistics (פחות חשוב) -->
+            <!-- Bottom Row: Chart and Statistics -->
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.6*"/>

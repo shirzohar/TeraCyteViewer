@@ -8,16 +8,16 @@ using TeraCyteViewer.Models;
 
 namespace TeraCyteViewer.Services
 {
-    public class ImageService
+    public class ImageService : IImageService
     {
         private readonly HttpClient _httpClient;
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
 
         private const string ImageUrl = "https://teracyte-assignment-server-764836180308.us-central1.run.app/api/image";
         private const int MaxRetries = 3;
         private readonly TimeSpan RetryDelay = TimeSpan.FromSeconds(2);
 
-        public ImageService(AuthService authService)
+        public ImageService(IAuthService authService)
         {
             _authService = authService;
             _httpClient = new HttpClient
@@ -26,7 +26,7 @@ namespace TeraCyteViewer.Services
             };
         }
 
-        public async Task<ImageData> GetLatestImageAsync()
+        public async Task<ImageData?> GetLatestImageAsync()
         {
             int retryCount = 0;
 
@@ -67,6 +67,10 @@ namespace TeraCyteViewer.Services
                     }
 
                     var json = await response.Content.ReadAsStringAsync();
+                    
+                    // Handle Infinity values in JSON
+                    json = json.Replace("Infinity", "\"Infinity\"").Replace("-Infinity", "\"-Infinity\"");
+                    
                     var parsed = JsonConvert.DeserializeObject<ImageApiResponse>(json);
                     
                     if (parsed == null)

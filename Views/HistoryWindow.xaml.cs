@@ -19,14 +19,13 @@ namespace TeraCyteViewer.Views
         {
             InitializeComponent();
             _historyCollection = historyCollection;
-            LoadHistory(historyCollection);
+            HistoryItemsControl.ItemsSource = _historyCollection;
+            UpdateHistoryDisplay();
         }
 
-        private void LoadHistory(IEnumerable<HistoryItem> historyItems)
+        private void UpdateHistoryDisplay()
         {
-            var items = historyItems?.ToList() ?? new List<HistoryItem>();
-            
-            HistoryItemsControl.ItemsSource = items;
+            var items = _historyCollection?.ToList() ?? new List<HistoryItem>();
             
             if (items.Any())
             {
@@ -55,6 +54,7 @@ namespace TeraCyteViewer.Views
                     {
                         _historyCollection.Remove(itemToRemove);
                         SaveHistory();
+                        UpdateHistoryDisplay();
                     }
                 }
             }
@@ -72,6 +72,7 @@ namespace TeraCyteViewer.Views
             {
                 _historyCollection.Clear();
                 SaveHistory();
+                UpdateHistoryDisplay();
             }
         }
 

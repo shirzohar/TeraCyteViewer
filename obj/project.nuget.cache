@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "CbgC4e3kQjY=",
+  "dgSpecHash": "9vCINpQH9RY=",
   "success": true,
   "projectFilePath": "C:\\Users\\shir3\\OneDrive\\שולחן העבודה\\TeraCyteViewer\\TeraCyteViewer\\TeraCyteViewer.csproj",
   "expectedPackageFiles": [
@@ -10,6 +10,8 @@
     "C:\\Users\\shir3\\.nuget\\packages\\livechartscore\\2.0.0-beta.710\\livechartscore.2.0.0-beta.710.nupkg.sha512",
     "C:\\Users\\shir3\\.nuget\\packages\\livechartscore.skiasharpview\\2.0.0-beta.710\\livechartscore.skiasharpview.2.0.0-beta.710.nupkg.sha512",
     "C:\\Users\\shir3\\.nuget\\packages\\livechartscore.skiasharpview.wpf\\2.0.0-beta.710\\livechartscore.skiasharpview.wpf.2.0.0-beta.710.nupkg.sha512",
+    "C:\\Users\\shir3\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\8.0.0\\microsoft.extensions.dependencyinjection.8.0.0.nupkg.sha512",
+    "C:\\Users\\shir3\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
     "C:\\Users\\shir3\\.nuget\\packages\\microsoft.netcore.platforms\\2.0.0\\microsoft.netcore.platforms.2.0.0.nupkg.sha512",
     "C:\\Users\\shir3\\.nuget\\packages\\microsoft.win32.systemevents\\4.5.0\\microsoft.win32.systemevents.4.5.0.nupkg.sha512",
     "C:\\Users\\shir3\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",

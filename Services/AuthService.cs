@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace TeraCyteViewer.Services
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private readonly HttpClient httpClient;
         private static readonly string loginUrl = "https://teracyte-assignment-server-764836180308.us-central1.run.app/api/auth/login";
@@ -262,15 +262,61 @@ namespace TeraCyteViewer.Services
                 if (!response.IsSuccessStatusCode)
                 {
                     var errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Failed to get current user: {response.StatusCode} - {errorContent}");
+                    var errorMessage = $"Failed to get current user: {response.StatusCode} - {errorContent}";
+                    System.Diagnostics.Debug.WriteLine(errorMessage);
+                    throw new Exception(errorMessage);
                 }
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(responseContent);
+                System.Diagnostics.Debug.WriteLine($"User info response: {responseContent}");
+                
+                // Try to parse as UserInfo first
+                UserInfo? userInfo = null;
+                try
+                {
+                    userInfo = JsonConvert.DeserializeObject<UserInfo>(responseContent);
+                }
+                catch (JsonException jsonEx)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to deserialize as UserInfo: {jsonEx.Message}");
+                    
+                    // Try to create a basic user info from the response
+                    try
+                    {
+                        var dynamicResponse = JsonConvert.DeserializeObject<dynamic>(responseContent);
+                        if (dynamicResponse != null)
+                        {
+                            userInfo = new UserInfo
+                            {
+                                Username = dynamicResponse.username?.ToString() ?? "Unknown User",
+                                UserId = dynamicResponse.user_id?.ToString() ?? "Unknown",
+                                Email = dynamicResponse.email?.ToString(),
+                                Role = dynamicResponse.role?.ToString(),
+                                IsActive = dynamicResponse.is_active?.Value ?? true,
+                                CreatedAt = DateTime.UtcNow,
+                                LastLogin = DateTime.UtcNow
+                            };
+                            System.Diagnostics.Debug.WriteLine("Created fallback UserInfo from dynamic response");
+                        }
+                    }
+                    catch (Exception fallbackEx)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Fallback parsing also failed: {fallbackEx.Message}");
+                        throw new Exception("Failed to parse user info response in any format");
+                    }
+                }
 
                 if (userInfo == null)
                 {
-                    throw new Exception("Failed to deserialize user info");
+                    throw new Exception("Failed to deserialize user info - response was null");
+                }
+
+                // Validate that we have at least some user data
+                if (string.IsNullOrEmpty(userInfo.Username) && string.IsNullOrEmpty(userInfo.UserId))
+                {
+                    System.Diagnostics.Debug.WriteLine("User info received but username and user_id are empty");
+                    // Set a default username if none is provided
+                    userInfo.Username = "TeraCyte User";
                 }
 
                 CurrentUser = userInfo;
@@ -278,6 +324,7 @@ namespace TeraCyteViewer.Services
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"GetCurrentUserAsync error: {ex.Message}");
                 throw new Exception($"Error getting current user: {ex.Message}");
             }
         }

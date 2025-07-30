@@ -2,6 +2,8 @@
 using System.Windows;
 using TeraCyteViewer.ViewModels;
 using System.Windows.Media.Animation;
+using Microsoft.Extensions.DependencyInjection;
+using TeraCyteViewer.Services;
 
 namespace TeraCyteViewer
 {
@@ -12,7 +14,13 @@ namespace TeraCyteViewer
         public MainWindow()
         {
             InitializeComponent();
-            ViewModel = new MainViewModel();
+            var app = (App)Application.Current;
+            ViewModel = app.ServiceProvider?.GetRequiredService<MainViewModel>() ?? 
+                       new MainViewModel(
+                           app.ServiceProvider?.GetRequiredService<IAuthService>() ?? new AuthService(),
+                           app.ServiceProvider?.GetRequiredService<IImageService>() ?? new ImageService(app.ServiceProvider?.GetRequiredService<IAuthService>() ?? new AuthService()),
+                           app.ServiceProvider?.GetRequiredService<IResultService>() ?? new ResultService(app.ServiceProvider?.GetRequiredService<IAuthService>() ?? new AuthService())
+                       );
             DataContext = ViewModel;
             
             // Subscribe to property changes to trigger animations

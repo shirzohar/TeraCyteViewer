@@ -7,16 +7,16 @@ using TeraCyteViewer.Models;
 
 namespace TeraCyteViewer.Services
 {
-    public class ResultService
+    public class ResultService : IResultService
     {
         private readonly HttpClient _httpClient;
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
 
         private const string ResultUrl = "https://teracyte-assignment-server-764836180308.us-central1.run.app/api/results";
         private const int MaxRetries = 3;
         private readonly TimeSpan RetryDelay = TimeSpan.FromSeconds(2);
 
-        public ResultService(AuthService authService)
+        public ResultService(IAuthService authService)
         {
             _authService = authService;
             _httpClient = new HttpClient
@@ -25,7 +25,7 @@ namespace TeraCyteViewer.Services
             };
         }
 
-        public async Task<ResultData> GetLatestResultsAsync()
+        public async Task<ResultData?> GetLatestResultsAsync()
         {
             int retryCount = 0;
 
@@ -66,6 +66,10 @@ namespace TeraCyteViewer.Services
                     }
 
                     var json = await response.Content.ReadAsStringAsync();
+                    
+                    // Handle Infinity values in JSON
+                    json = json.Replace("Infinity", "\"Infinity\"").Replace("-Infinity", "\"-Infinity\"");
+                    
                     var result = JsonConvert.DeserializeObject<ResultData>(json);
 
                     if (result == null)

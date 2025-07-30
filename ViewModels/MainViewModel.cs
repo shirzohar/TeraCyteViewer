@@ -19,9 +19,9 @@ namespace TeraCyteViewer.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        private readonly AuthService _authService;
-        private readonly ImageService _imageService;
-        private readonly ResultService _resultService;
+        private readonly IAuthService _authService;
+        private readonly IImageService _imageService;
+        private readonly IResultService _resultService;
 
         private string _statusMessage = "Initializing...";
         private StatusType _statusType = StatusType.Info;
@@ -73,11 +73,11 @@ namespace TeraCyteViewer.ViewModels
         public RelayCommand LogoutCommand { get; }
         public RelayCommand LoginCommand { get; }
 
-        public MainViewModel()
+        public MainViewModel(IAuthService authService, IImageService imageService, IResultService resultService)
         {
-            _authService = new AuthService();
-            _imageService = new ImageService(_authService);
-            _resultService = new ResultService(_authService);
+            _authService = authService;
+            _imageService = imageService;
+            _resultService = resultService;
 
             _updateTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             _updateTimer.Tick += (s, e) => OnPropertyChanged(nameof(LastUpdateTime));
@@ -111,13 +111,23 @@ namespace TeraCyteViewer.ViewModels
                             var userInfo = await _authService.GetCurrentUserAsync();
                             CurrentUser = userInfo;
                             IsAuthenticated = true;
-                            StatusMessage = $"Welcome back, {userInfo?.Username ?? "User"}!";
+                            
+                            if (userInfo != null && !string.IsNullOrEmpty(userInfo.Username))
+                            {
+                                StatusMessage = $"Welcome back, {userInfo.Username}!";
+                            }
+                            else
+                            {
+                                StatusMessage = "Welcome back! (User info incomplete)";
+                            }
+                            
                             StatusType = StatusType.Success;
                             _updateTimer.Start();
                             return;
                         }
-                        catch
+                        catch (Exception userInfoEx)
                         {
+                            System.Diagnostics.Debug.WriteLine($"User info retrieval failed during initialization: {userInfoEx.Message}");
                             // Token validation failed, clear stored tokens
                             _authService.ClearStoredTokens();
                         }
@@ -219,7 +229,28 @@ namespace TeraCyteViewer.ViewModels
                 if (response != null)
                 {
                     IsAuthenticated = true;
-                    StatusMessage = "Re-authentication successful";
+                    
+                    try
+                    {
+                        var userInfo = await _authService.GetCurrentUserAsync();
+                        CurrentUser = userInfo;
+                        
+                        if (userInfo != null && !string.IsNullOrEmpty(userInfo.Username))
+                        {
+                            StatusMessage = $"Re-authentication successful! Welcome, {userInfo.Username}";
+                        }
+                        else
+                        {
+                            StatusMessage = "Re-authentication successful! (User info incomplete)";
+                        }
+                    }
+                    catch (Exception userInfoEx)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"User info retrieval failed during re-authentication: {userInfoEx.Message}");
+                        StatusMessage = "Re-authentication successful! (User info unavailable)";
+                        CurrentUser = null;
+                    }
+                    
                     StatusType = StatusType.Success;
                 }
             }
@@ -617,12 +648,17 @@ namespace TeraCyteViewer.ViewModels
         public UserInfo? CurrentUser
         {
             get => _currentUser;
-            set => SetProperty(ref _currentUser, value);
+            set 
+            { 
+                SetProperty(ref _currentUser, value);
+            }
         }
 
         private void StartMonitoring()
         {
             IsRunning = true;
+            StatusMessage = "Starting monitoring...";
+            StatusType = StatusType.Info;
             _ = PollLoop();
         }
 
@@ -630,6 +666,8 @@ namespace TeraCyteViewer.ViewModels
         {
             IsRunning = false;
             _updateTimer.Stop();
+            StatusMessage = "Monitoring stopped.";
+            StatusType = StatusType.Info;
         }
 
         private void ShowHistory()
@@ -687,6 +725,13 @@ namespace TeraCyteViewer.ViewModels
             {
                 StatusMessage = "Logging out...";
                 StatusType = StatusType.Info;
+                
+                // Stop monitoring if it's running
+                if (IsRunning)
+                {
+                    StopMonitoring();
+                }
+                
                 await _authService.LogoutAsync();
                 IsAuthenticated = false;
                 StatusMessage = "Logged out successfully.";
@@ -723,11 +768,22 @@ namespace TeraCyteViewer.ViewModels
                 {
                     var userInfo = await _authService.GetCurrentUserAsync();
                     CurrentUser = userInfo;
-                    StatusMessage = $"Authentication successful! Welcome, {userInfo?.Username ?? "User"}";
+                    
+                    if (userInfo != null && !string.IsNullOrEmpty(userInfo.Username))
+                    {
+                        StatusMessage = $"Authentication successful! Welcome, {userInfo.Username}";
+                    }
+                    else
+                    {
+                        StatusMessage = "Authentication successful! (User info incomplete)";
+                    }
                 }
-                catch
+                catch (Exception userInfoEx)
                 {
+                    // Log the specific error for debugging
+                    System.Diagnostics.Debug.WriteLine($"User info retrieval failed: {userInfoEx.Message}");
                     StatusMessage = "Authentication successful! (User info unavailable)";
+                    CurrentUser = null;
                 }
                 
                 StatusType = StatusType.Success;
