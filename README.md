@@ -44,7 +44,7 @@ A real-time microscope image analysis application built with .NET 8.0 WPF, featu
 
 ## 🎥 Demo Video
 
-https://github.com/shirzohar/TeraCyteViewer/assets/123456789/demo.mp4
+![Demo Video](screenshots/demo.mp4)
 
 *Complete demonstration of the application features including authentication, real-time monitoring, history management, and error handling*
 
