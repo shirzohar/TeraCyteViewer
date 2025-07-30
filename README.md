@@ -30,29 +30,21 @@ A real-time microscope image analysis application built with .NET 8.0 WPF, featu
 
 ## 📸 Screenshots
 
-### Main Application Interface
-![Main Interface](screenshots/main-interface.png)
+### Main Application Dashboard
+![Main Dashboard](screenshots/dashboard.png)
 *Live image viewer with real-time analysis results, histogram visualization, and comprehensive metrics display*
 
-### Authentication & Login
-![Login Screen](screenshots/login-screen.png)
+### Authentication & Login Screen
+![Before Login](screenshots/before%20login%20.png)
 *Secure JWT authentication with automatic token refresh and session persistence*
 
 ### History Management
-![History Window](screenshots/history-window.png)
+![History Window](screenshots/History.png)
 *Complete image history with individual deletion options and bulk clear functionality*
-
-### Real-time Data Visualization
-![Data Visualization](screenshots/data-visualization.png)
-*Live histogram with statistical analysis and visual cues for new data*
-
-### Error Handling & Status
-![Error Handling](screenshots/error-handling.png)
-*Graceful error handling with user-friendly messages and automatic retry logic*
 
 ## 🎥 Demo Video
 
-https://github.com/shirzohar/TeraCyteViewer/assets/123456789/demo-video.mp4
+https://github.com/shirzohar/TeraCyteViewer/assets/123456789/demo.mp4
 
 *Complete demonstration of the application features including authentication, real-time monitoring, history management, and error handling*
 
