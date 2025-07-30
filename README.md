@@ -183,6 +183,104 @@ public MainViewModel(IAuthService authService, IImageService imageService, IResu
 6. **User Interaction** → Commands trigger actions in ViewModel
 7. **Data Persistence** → Secure storage of tokens and history
 
+### Architecture Diagrams
+
+**Component Architecture:**
+```mermaid
+graph TB
+    subgraph "UI Layer"
+        MainWindow[MainWindow.xaml]
+        HistoryWindow[HistoryWindow.xaml]
+    end
+    
+    subgraph "ViewModel Layer"
+        MainVM[MainViewModel]
+        BaseVM[BaseViewModel]
+    end
+    
+    subgraph "Service Layer"
+        AuthS[AuthService]
+        ImageS[ImageService]
+        ResultS[ResultService]
+    end
+    
+    subgraph "Model Layer"
+        ImageData[ImageData]
+        ResultData[ResultData]
+        LoginRequest[LoginRequest]
+        UserInfo[UserInfo]
+    end
+    
+    subgraph "External APIs"
+        API[Teracyte API]
+    end
+    
+    subgraph "Storage"
+        SecureStorage[DPAPI Encrypted Storage]
+    end
+    
+    MainWindow --> MainVM
+    HistoryWindow --> MainVM
+    MainVM --> BaseVM
+    MainVM --> AuthS
+    MainVM --> ImageS
+    MainVM --> ResultS
+    AuthS --> API
+    ImageS --> API
+    ResultS --> API
+    AuthS --> SecureStorage
+    MainVM --> ImageData
+    MainVM --> ResultData
+    AuthS --> LoginRequest
+    AuthS --> UserInfo
+```
+
+**Authentication & Data Flow:**
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant UI as MainWindow
+    participant VM as MainViewModel
+    participant Auth as AuthService
+    participant API as Teracyte API
+    participant Storage as Secure Storage
+    
+    U->>UI: Start Application
+    UI->>VM: Initialize
+    VM->>Storage: Load Stored Tokens
+    alt Tokens Exist & Valid
+        VM->>Auth: Validate Token
+        Auth->>API: GET /api/auth/me
+        API-->>Auth: User Info
+        Auth-->>VM: Valid Session
+        VM->>UI: Show Authenticated State
+    else No Tokens or Invalid
+        VM->>UI: Show Login Prompt
+        U->>UI: Enter Credentials
+        UI->>VM: Login Command
+        VM->>Auth: Login
+        Auth->>API: POST /api/auth/login
+        API-->>Auth: JWT Tokens
+        Auth->>Storage: Save Tokens
+        Auth-->>VM: Login Success
+    end
+    
+    loop Polling Loop (Every 2 seconds)
+        VM->>Auth: Check Token Expiry
+        alt Token Expired
+            Auth->>API: POST /api/auth/refresh
+            API-->>Auth: New Access Token
+            Auth->>Storage: Update Tokens
+        end
+        VM->>API: GET /api/image
+        API-->>VM: Latest Image
+        VM->>API: GET /api/results
+        API-->>VM: Analysis Results
+        VM->>UI: Update Display
+        VM->>Storage: Save to History
+    end
+```
+
 ## 🎮 Usage
 
 ### Main Controls
@@ -264,15 +362,6 @@ The application uses the following TeraCyte API endpoints:
 - **Memory Management** - Automatic cleanup of old data
 - **Error Recovery** - Robust error handling and retry logic
 - **Infinity Value Handling** - JSON parsing workaround for server issues
-
-
-
-
-
-
-
-
-
 
 ---
 
