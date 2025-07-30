@@ -60,6 +60,8 @@ namespace TeraCyteViewer.ViewModels
         private bool _showHistogramNewIndicator = false;
         private bool _isVisualCueActive = false;
 
+        private UserInfo? _currentUser;
+
         public ObservableCollection<HistoryItem> History { get; } = new ObservableCollection<HistoryItem>();
 
         private readonly DispatcherTimer _updateTimer;
@@ -68,6 +70,8 @@ namespace TeraCyteViewer.ViewModels
         public RelayCommand StopMonitoringCommand { get; }
         public RelayCommand ShowHistoryCommand { get; }
         public RelayCommand RefreshCommand { get; }
+        public RelayCommand LogoutCommand { get; }
+        public RelayCommand LoginCommand { get; }
 
         public MainViewModel()
         {
@@ -80,9 +84,12 @@ namespace TeraCyteViewer.ViewModels
 
             StartMonitoringCommand = new RelayCommand(StartMonitoring, () => IsAuthenticated && !IsRunning);
             StopMonitoringCommand = new RelayCommand(StopMonitoring, () => IsRunning);
-            ShowHistoryCommand = new RelayCommand(ShowHistory, () => History.Count > 0);
+            ShowHistoryCommand = new RelayCommand(ShowHistory, () => IsAuthenticated);
             RefreshCommand = new RelayCommand(RefreshData, () => IsAuthenticated);
+            LogoutCommand = new RelayCommand(Logout, () => IsAuthenticated);
+            LoginCommand = new RelayCommand(Login, () => !IsAuthenticated);
 
+            LoadStoredHistory();
             _ = InitializeAsync();
         }
 
@@ -90,27 +97,41 @@ namespace TeraCyteViewer.ViewModels
         {
             try
             {
-                StatusMessage = "Authenticating with TeraCyte server...";
-                StatusType = StatusType.Info;
-                
-                var response = await _authService.LoginAsync("shir.zohar", "biotech456");
-                if (response == null)
+                // Check if we have stored tokens
+                if (!string.IsNullOrEmpty(_authService.GetAccessToken()))
                 {
-                    StatusMessage = "Authentication failed - no response received";
-                    StatusType = StatusType.Error;
-                    return;
+                    StatusMessage = "Validating stored authentication...";
+                    StatusType = StatusType.Info;
+                    
+                    var isValid = await _authService.ValidateTokenAsync();
+                    if (isValid)
+                    {
+                        try
+                        {
+                            var userInfo = await _authService.GetCurrentUserAsync();
+                            CurrentUser = userInfo;
+                            IsAuthenticated = true;
+                            StatusMessage = $"Welcome back, {userInfo?.Username ?? "User"}!";
+                            StatusType = StatusType.Success;
+                            _updateTimer.Start();
+                            return;
+                        }
+                        catch
+                        {
+                            // Token validation failed, clear stored tokens
+                            _authService.ClearStoredTokens();
+                        }
+                    }
                 }
 
-                IsAuthenticated = true;
+                // No valid stored tokens, show login prompt
+                StatusMessage = "Please login to start monitoring.";
+                StatusType = StatusType.Info;
                 IsLoading = false;
-                StatusMessage = "Authentication successful! Ready to start monitoring.";
-                StatusType = StatusType.Success;
-                
-                _updateTimer.Start();
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Authentication failed: {ex.Message}";
+                StatusMessage = $"Initialization failed: {ex.Message}";
                 StatusType = StatusType.Error;
                 IsLoading = false;
             }
@@ -145,6 +166,15 @@ namespace TeraCyteViewer.ViewModels
                         }
                         StatusMessage = "Token refreshed successfully";
                         StatusType = StatusType.Success;
+                    }
+
+                    var isValid = await _authService.ValidateTokenAsync();
+                    if (!isValid)
+                    {
+                        StatusMessage = "Token validation failed. Attempting re-login...";
+                        StatusType = StatusType.Error;
+                        await Reauthenticate();
+                        continue;
                     }
 
                     var imageData = await _imageService.GetLatestImageAsync();
@@ -366,7 +396,22 @@ namespace TeraCyteViewer.ViewModels
                 History.RemoveAt(History.Count - 1);
             }
 
+            SaveHistory();
             RefreshCommandStates();
+        }
+
+        private void SaveHistory()
+        {
+            try
+            {
+                var historyList = History.ToList();
+                _authService.SaveHistory(historyList);
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Failed to save history: {ex.Message}";
+                StatusType = StatusType.Error;
+            }
         }
 
         public string StatusMessage
@@ -569,6 +614,12 @@ namespace TeraCyteViewer.ViewModels
             set => SetProperty(ref _isVisualCueActive, value);
         }
 
+        public UserInfo? CurrentUser
+        {
+            get => _currentUser;
+            set => SetProperty(ref _currentUser, value);
+        }
+
         private void StartMonitoring()
         {
             IsRunning = true;
@@ -583,6 +634,15 @@ namespace TeraCyteViewer.ViewModels
 
         private void ShowHistory()
         {
+            if (History.Count == 0)
+            {
+                MessageBox.Show("No images in history yet. Start monitoring to see images here.", 
+                    "Empty History", 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Information);
+                return;
+            }
+            
             var historyWindow = new Views.HistoryWindow(History);
             historyWindow.Show();
         }
@@ -593,6 +653,8 @@ namespace TeraCyteViewer.ViewModels
             StopMonitoringCommand.RaiseCanExecuteChanged();
             ShowHistoryCommand.RaiseCanExecuteChanged();
             RefreshCommand.RaiseCanExecuteChanged();
+            LogoutCommand.RaiseCanExecuteChanged();
+            LoginCommand.RaiseCanExecuteChanged();
         }
 
         private async void RefreshData()
@@ -615,6 +677,88 @@ namespace TeraCyteViewer.ViewModels
             catch (Exception ex)
             {
                 StatusMessage = $"Refresh failed: {ex.Message}";
+                StatusType = StatusType.Error;
+            }
+        }
+
+        private async void Logout()
+        {
+            try
+            {
+                StatusMessage = "Logging out...";
+                StatusType = StatusType.Info;
+                await _authService.LogoutAsync();
+                IsAuthenticated = false;
+                StatusMessage = "Logged out successfully.";
+                StatusType = StatusType.Success;
+                CurrentUser = null;
+                _updateTimer.Stop();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Logout failed: {ex.Message}";
+                StatusType = StatusType.Error;
+            }
+        }
+
+        private async void Login()
+        {
+            try
+            {
+                IsLoading = true;
+                StatusMessage = "Authenticating with TeraCyte server...";
+                StatusType = StatusType.Info;
+                
+                var response = await _authService.LoginAsync("shir.zohar", "biotech456");
+                if (response == null)
+                {
+                    StatusMessage = "Authentication failed - no response received";
+                    StatusType = StatusType.Error;
+                    return;
+                }
+
+                IsAuthenticated = true;
+                
+                try
+                {
+                    var userInfo = await _authService.GetCurrentUserAsync();
+                    CurrentUser = userInfo;
+                    StatusMessage = $"Authentication successful! Welcome, {userInfo?.Username ?? "User"}";
+                }
+                catch
+                {
+                    StatusMessage = "Authentication successful! (User info unavailable)";
+                }
+                
+                StatusType = StatusType.Success;
+                IsLoading = false;
+                
+                _updateTimer.Start();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Authentication failed: {ex.Message}";
+                StatusType = StatusType.Error;
+                IsLoading = false;
+            }
+        }
+
+        private void LoadStoredHistory()
+        {
+            try
+            {
+                var storedHistory = _authService.LoadHistory();
+                if (storedHistory != null)
+                {
+                    foreach (var item in storedHistory)
+                    {
+                        History.Add(item);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Failed to load history: {ex.Message}";
                 StatusType = StatusType.Error;
             }
         }

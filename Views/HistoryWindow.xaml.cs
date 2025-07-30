@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using TeraCyteViewer.Models;
+using System;
 
 namespace TeraCyteViewer.Views
 {
@@ -49,11 +50,11 @@ namespace TeraCyteViewer.Views
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    var itemToRemove = _historyCollection.FirstOrDefault(item => item.ImageId == imageId);
+                    var itemToRemove = _historyCollection.FirstOrDefault(x => x.ImageId == imageId);
                     if (itemToRemove != null)
                     {
                         _historyCollection.Remove(itemToRemove);
-                        LoadHistory(_historyCollection);
+                        SaveHistory();
                     }
                 }
             }
@@ -61,22 +62,30 @@ namespace TeraCyteViewer.Views
 
         private void ClearAllButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_historyCollection.Count == 0)
-            {
-                MessageBox.Show("History is already empty.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
-
             var result = MessageBox.Show(
-                $"Are you sure you want to delete all {_historyCollection.Count} images from history?",
+                "Are you sure you want to clear all history?",
                 "Confirm Clear All",
                 MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
+                MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
             {
                 _historyCollection.Clear();
-                LoadHistory(_historyCollection);
+                SaveHistory();
+            }
+        }
+
+        private void SaveHistory()
+        {
+            try
+            {
+                var authService = new Services.AuthService();
+                var historyList = _historyCollection.ToList();
+                authService.SaveHistory(historyList);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to save history: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

@@ -1,42 +1,48 @@
 # 🧬 TeraCyte Live Image Viewer
 
-A real-time microscopy image viewer with AI inference overlay, built with .NET WPF and MVVM architecture.
-
-## 📋 Overview
-
-This application connects to the TeraCyte backend to fetch live microscope images and their corresponding AI analysis results. It displays images with inference overlays, numerical analysis metrics, and intensity histograms in real-time.
+A real-time microscope image analysis application built with .NET 8.0 WPF, featuring live data polling, JWT authentication, and advanced image analysis capabilities.
 
 ## ✨ Features
 
-- **🔐 JWT Authentication** - Secure login with automatic token refresh
-- **📡 Real-time Polling** - Continuously fetches new image data and results
-- **🖼️ Image Display** - Shows microscope images with AI inference overlays
-- **📊 Analysis Results** - Displays intensity average, focus score, and classification
-- **📈 Live Histogram** - Visual representation of 256 intensity values
-- **📚 History View** - Scrollable history of previously seen images
-- **🎨 Color-coded UI** - Visual feedback for different data states
-- **🎯 Smart Classification** - Color-coded results (Green for HEALTH, Red for ANOMALY)
-- **📊 Hierarchical Dashboard** - Optimized layout with results prioritized
-- **🛡️ Robust Error Handling** - Graceful handling of network issues and data delays
-- **📝 Comprehensive Logging** - Detailed error tracking and user feedback
-- **⚡ MVVM Architecture** - Clean separation of concerns
+### 🔐 **Authentication & Security**
+- **JWT Token Management**: Secure login with automatic token refresh
+- **Encrypted Storage**: Tokens and history encrypted using Windows DPAPI
+- **Session Persistence**: Automatic login restoration between sessions
+- **User Information**: Display current user details and role
+- **Secure Logout**: Complete session cleanup with option to re-login
 
-## 🛠️ Technology Stack
+### 📊 **Real-Time Monitoring**
+- **Live Data Polling**: Continuous monitoring of microscope images
+- **Smart Change Detection**: Only updates when new images are detected
+- **Automatic Reconnection**: Handles network interruptions gracefully
+- **Status Indicators**: Real-time connection and processing status
 
-- **.NET 8.0** - Latest .NET framework
-- **WPF (Windows Presentation Foundation)** - Modern UI framework
-- **MVVM Pattern** - Model-View-ViewModel architecture
-- **LiveCharts** - Real-time charting library
-- **Newtonsoft.Json** - JSON serialization
-- **HttpClient** - HTTP communication
+### 🔬 **Image Analysis**
+- **Classification Results**: Automatic cell health classification
+- **Focus Scoring**: Image quality assessment
+- **Intensity Analysis**: Detailed pixel intensity measurements
+- **Histogram Visualization**: Live charts with statistical analysis
+- **Dynamic Metrics**: Real-time calculation of processing metrics
 
-## 🚀 Getting Started
+### 📚 **History Management**
+- **Persistent Storage**: History saved between sessions and logins
+- **Image Gallery**: Visual history of all analyzed images
+- **Individual Deletion**: Remove specific images from history
+- **Bulk Operations**: Clear all history with confirmation
+- **Encrypted Storage**: History data protected with user-specific encryption
+
+### 🎨 **User Interface**
+- **Modern Design**: Clean, professional interface with animations
+- **Responsive Layout**: Adapts to different screen sizes
+- **Visual Feedback**: Animated indicators for new data
+- **Status Updates**: Real-time progress and error reporting
+- **Accessibility**: High contrast and clear visual hierarchy
+
+## 🚀 Quick Start
 
 ### Prerequisites
-
-- Windows 10/11
-- .NET 8.0 SDK or Runtime
-- Visual Studio 2022 (recommended) or VS Code
+- **.NET 8.0 Runtime** or later
+- **Windows 10/11** (for DPAPI encryption)
 
 ### Installation
 
@@ -63,6 +69,27 @@ The application uses the following default credentials:
 - **Password:** `biotech456`
 - **API Base URL:** `https://teracyte-assignment-server-764836180308.us-central1.run.app`
 
+## 🔐 Security Features
+
+### Secure Token Storage
+- **Encrypted Storage**: Tokens are encrypted using Windows Data Protection API (DPAPI)
+- **User-Specific**: Encryption is tied to the current Windows user account
+- **Automatic Persistence**: Tokens are automatically saved and restored between sessions
+- **Secure Cleanup**: Tokens are properly cleared on logout
+
+### Authentication Flow
+1. **Initial Login**: Authenticate with username/password
+2. **Token Storage**: Encrypt and store tokens locally
+3. **Session Restoration**: Automatically restore valid tokens on app restart
+4. **Token Refresh**: Automatically refresh expired tokens
+5. **Secure Logout**: Clear all stored tokens and authentication state
+
+### Data Protection
+- **History Encryption**: All history data is encrypted using DPAPI
+- **User Isolation**: Data is tied to the current Windows user
+- **Secure Deletion**: Proper cleanup of sensitive data
+- **No Plain Text**: No sensitive data stored in plain text
+
 ## 🏗️ Architecture
 
 ### MVVM Structure
@@ -73,19 +100,22 @@ TeraCyteViewer/
 │   ├── ImageData.cs       # Image data structure
 │   ├── ResultData.cs      # Analysis results
 │   ├── LoginRequest.cs    # Authentication request
-│   └── LoginResponse.cs   # Authentication response
+│   ├── LoginResponse.cs   # Authentication response
+│   └── UserInfo.cs        # User information model
 ├── ViewModels/            # ViewModels (MVVM)
 │   ├── BaseViewModel.cs   # Base class with INotifyPropertyChanged
 │   ├── MainViewModel.cs   # Main application logic
 │   └── RelayCommand.cs    # Command implementation
 ├── Services/              # Business logic services
-│   ├── AuthService.cs     # JWT authentication
+│   ├── AuthService.cs     # JWT authentication & secure storage
 │   ├── ImageService.cs    # Image data fetching
 │   ├── ResultService.cs   # Results data fetching
 │   └── AuthState.cs       # Authentication state management
 ├── Views/                 # UI Views
-│   ├── HistoryWindow.xaml # History view
+│   ├── HistoryWindow.xaml # History view with management
 │   └── HistoryWindow.xaml.cs
+├── Helpers/               # Utility classes
+│   └── InverseBooleanToVisibilityConverter.cs
 └── MainWindow.xaml        # Main application window
 ```
 
@@ -95,131 +125,110 @@ TeraCyteViewer/
 2. **Data Polling** → `ImageService` and `ResultService` fetch data
 3. **UI Updates** → `MainViewModel` updates properties via data binding
 4. **User Interaction** → Commands trigger actions in ViewModel
+5. **Data Persistence** → Secure storage of tokens and history
 
 ## 🎮 Usage
 
 ### Main Controls
 
+- **🔑 Login** - Authenticate with the TeraCyte server
 - **▶️ Start Monitoring** - Begin real-time data polling
 - **⏹️ Stop Monitoring** - Stop data polling
 - **🔄 Refresh** - Manually fetch latest data
-- **📚 History** - View previously seen images
+- **📚 History** - View and manage previously seen images
+- **🚪 Logout** - Securely end session and clear tokens
 
-### Understanding the Display
+### Authentication States
 
-The application features a **hierarchical dashboard layout** optimized for efficient data viewing:
+**Not Authenticated:**
+- Login button visible
+- Monitoring controls disabled
+- "Please login to start monitoring" message
 
-#### **Top Section (Primary Content)**
-- **🔬 Microscope Image** (40% width) - Shows the current image with AI detection overlays
-- **📊 Analysis Results** (60% width) - Displays comprehensive analysis with scrollable content:
-  - **🎯 Classification** - AI classification with color coding:
-    - 🟢 **Green** for HEALTH/HEALTHY
-    - 🔴 **Red** for ANOMALY
-  - **📋 Image Details** - Quality and processing information
-  - **🎯 Confidence Metrics** - Detection confidence and accuracy
-  - **📡 System Status** - Connection and update status
+**Authenticated:**
+- User info displayed
+- History and Logout buttons visible
+- Full monitoring capabilities available
 
-#### **Bottom Section (Secondary Content)**
-- **📈 Intensity Histogram** (60% width) - Distribution of pixel intensities with random colors
-- **📊 Histogram Statistics** (40% width) - Detailed statistical analysis:
-  - Total Values, Max/Min Values, Average, Median
-  - Non-Zero Count, Standard Deviation
+### History Management
 
-#### **Color Coding System**
-- **HEALTH/HEALTHY** = 🟢 Green (positive)
-- **ANOMALY** = 🔴 Red (negative)
-- **Consistent across main view and history**
+**Viewing History:**
+- Click "📚 History" to open history window
+- Browse through all analyzed images
+- View classification results and timestamps
 
-## 🔧 Development
+**Managing History:**
+- Delete individual images with confirmation
+- Clear all history with bulk operation
+- History persists between sessions and logins
 
-### Project Structure
+## 📡 API Endpoints
 
-The application follows MVVM best practices:
+The application uses the following TeraCyte API endpoints:
 
-- **Models** - Pure data structures
-- **ViewModels** - Business logic and data binding
-- **Views** - UI presentation only
-- **Services** - External communication and data processing
+- **POST /api/auth/login** - User authentication
+- **POST /api/auth/refresh** - Token refresh
+- **GET /api/auth/me** - Current user information
+- **GET /api/image** - Latest microscope image
+- **GET /api/results** - Analysis results for current image
 
-### Key Components
+## 🔧 Technical Details
 
-#### MainViewModel
-- Manages application state and data
-- Handles authentication and polling
-- Updates UI through data binding
-- Processes image and result data
+### Dependencies
+- **.NET 8.0** - Modern .NET framework
+- **WPF** - Windows Presentation Foundation
+- **LiveCharts** - Real-time data visualization
+- **Newtonsoft.Json** - JSON serialization
+- **HttpClient** - HTTP communication
 
-#### Services
-- **AuthService** - JWT token management
-- **ImageService** - Image data retrieval
-- **ResultService** - Analysis results retrieval
+### Security Implementation
+- **DPAPI Encryption** - Windows Data Protection API
+- **JWT Tokens** - JSON Web Token authentication
+- **User-Specific Keys** - Encryption tied to Windows user
+- **Secure Storage** - Local encrypted file storage
 
-#### Commands
-- **StartMonitoringCommand** - Begin data polling
-- **StopMonitoringCommand** - Stop data polling
-- **RefreshCommand** - Manual data refresh
-- **ShowHistoryCommand** - Open history window
+### Performance Features
+- **Async Operations** - Non-blocking UI operations
+- **Smart Polling** - Efficient data fetching
+- **Memory Management** - Automatic cleanup of old data
+- **Error Recovery** - Robust error handling and retry logic
 
 ## 🐛 Troubleshooting
 
 ### Common Issues
 
-1. **Authentication Failed**
-   - Check internet connection
-   - Verify credentials are correct
-   - Check if server is accessible
-   - Application will automatically retry authentication
+**Authentication Failed:**
+- Verify internet connection
+- Check username/password
+- Ensure server is accessible
 
-2. **No Data Received**
-   - Ensure monitoring is started
-   - Check network connectivity
-   - Verify API endpoints are working
-   - Application will continue polling with exponential backoff
+**History Not Loading:**
+- Check file permissions in `%LocalAppData%\TeraCyteViewer\`
+- Verify Windows user account hasn't changed
+- Clear stored data if corrupted
 
-3. **UI Not Updating**
-   - Check data binding in XAML
-   - Verify ViewModel properties are updating
-   - Ensure commands are properly connected
+**Images Not Updating:**
+- Check network connectivity
+- Verify authentication status
+- Restart monitoring if needed
 
-4. **Network Timeouts**
-   - Application automatically retries failed requests
-   - Check firewall settings
-   - Verify server availability
+### Log Files
+Application logs are stored in:
+```
+logs/teracyte.log
+```
 
-### Debug Information
+## 🤝 Contributing
 
-The application provides real-time status messages:
-- ✅ Success messages (green)
-- ⚠️ Warning messages (orange)
-- ❌ Error messages (red)
-- 🔄 Info messages (blue)
-
-### Error Recovery Features
-
-- **Automatic Retry** - Failed requests are retried up to 3 times
-- **Token Refresh** - Authentication tokens are automatically refreshed
-- **Graceful Degradation** - Application continues running even with network issues
-- **User Feedback** - Clear status messages for all error conditions
-
-## 📈 Performance
-
-- **Polling Interval** - 5 seconds between data fetches
-- **Token Refresh** - Automatic refresh 1 minute before expiry
-- **History Limit** - Maximum 50 items to prevent memory issues
-- **Error Handling** - Exponential backoff for failed requests
-- **UI Responsiveness** - Optimized layout with prioritized content areas
-- **Memory Management** - Efficient image handling and data binding
-- **Network Resilience** - Retry mechanism with 3 attempts and 2-second delays
-- **Timeout Protection** - 15-second timeout for all HTTP requests
-
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
 ## 📄 License
 
-This project is part of the TeraCyte assignment for Shir Zohar.
-
-## 👨‍💻 Author
-
-**Shir Zohar** - TeraCyte Assignment
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
 
