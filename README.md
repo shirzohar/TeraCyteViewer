@@ -42,11 +42,7 @@ A real-time microscope image analysis application built with .NET 8.0 WPF, featu
 ![History Window](screenshots/History.png)
 *Complete image history with individual deletion options and bulk clear functionality*
 
-## 🎥 Demo Video
 
-![Demo Video](screenshots/demo.mp4)
-
-*Complete demonstration of the application features including authentication, real-time monitoring, history management, and error handling*
 
 ## 🎯 Features
 
