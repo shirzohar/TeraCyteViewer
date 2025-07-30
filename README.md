@@ -130,10 +130,21 @@ TeraCyteViewer/
 │   └── HistoryWindow.xaml.cs
 ├── Helpers/               # Utility classes
 │   └── InverseBooleanToVisibilityConverter.cs
+├── logs/                  # Application logs
+│   └── teracyte.log       # Debug and error logging
+├── screenshots/           # Application screenshots
+│   ├── dashboard.png      # Main interface
+│   ├── before login .png  # Login screen
+│   ├── History.png        # History window
+│   └── demo.mp4           # Demo video
 ├── App.xaml               # Application entry point
 ├── App.xaml.cs            # DI container configuration
 ├── MainWindow.xaml        # Main application window
-└── MainWindow.xaml.cs     # Window with DI service resolution
+├── MainWindow.xaml.cs     # Window with DI service resolution
+├── TeraCyteViewer.csproj  # Project file
+├── TeraCyteViewer.csproj.user  # User-specific project settings
+├── AssemblyInfo.cs        # Assembly metadata
+└── README.md              # Project documentation
 ```
 
 ### Dependency Injection Configuration
