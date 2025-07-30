@@ -254,43 +254,26 @@ The application uses the following TeraCyte API endpoints:
 - **Error Recovery** - Robust error handling and retry logic
 - **Infinity Value Handling** - JSON parsing workaround for server issues
 
-## 🐛 Troubleshooting
 
-### Common Issues
-
-**Authentication Failed:**
-- Verify internet connection
-- Check username/password
-- Ensure server is accessible
-
-**History Not Loading:**
-- Check file permissions in `%LocalAppData%\TeraCyteViewer\`
-- Verify Windows user account hasn't changed
-- Clear stored data if corrupted
-
-**Images Not Updating:**
-- Check network connectivity
-- Verify authentication status
-- Restart monitoring if needed
-
-**JSON Parsing Errors:**
-- Application handles Infinity values automatically
-- Check server response format
-- Verify API endpoint availability
-
-### Log Files
-Application logs are stored in:
-```
-logs/teracyte.log
-```
 
 ## 🧪 Testing
 
-### Unit Testing Support
-The DI architecture enables easy unit testing:
+### Testing Architecture Support
+The application is designed with testing in mind through:
 
+**Dependency Injection:**
+- All services implement interfaces for easy mocking
+- Constructor injection enables unit testing
+- DI container configuration is centralized
+
+**Testable Design:**
+- Separation of concerns with MVVM pattern
+- Services are loosely coupled
+- Business logic is isolated in ViewModels
+
+**Example Test Setup (Theoretical):**
 ```csharp
-// Example test setup
+// Example of how tests could be written
 var mockAuthService = new Mock<IAuthService>();
 var mockImageService = new Mock<IImageService>();
 var mockResultService = new Mock<IResultService>();
@@ -302,63 +285,11 @@ var viewModel = new MainViewModel(
 );
 ```
 
-### Integration Testing
-- Test service interactions
-- Verify DI container configuration
-- Validate data flow between components
+**Note:** While the architecture supports comprehensive testing, actual test files are not included in this assignment submission.
 
 
 
-## 🏆 Bonus Points Implementation
 
-This project successfully implements all bonus points and advanced features:
-
-### ✅ **Stack Alignment Bonus**
-- **C# with .NET 8.0** - Latest framework with modern features
-- **WPF** - Windows Presentation Foundation for rich UI
-- **MVVM Architecture** - Full implementation with Dependency Injection
-- **Real Charting Library** - LiveCharts with SkiaSharp rendering
-
-### ✅ **Advanced UI/UX Features**
-- **Scrollable History View** - Complete image gallery with analysis results
-- **Visual Cues on New Data** - Fade-in animations, pulse effects, glow indicators
-- **Professional Polish** - Modern design with shadows, hover effects, smooth animations
-- **Responsive Layout** - Adapts to different screen sizes
-
-### ✅ **Robust Error Handling**
-- **Graceful Handling of Delayed/Missing Results** - Retry logic with exponential backoff
-- **Timeout Management** - 15-second timeouts with 3 retry attempts
-- **Specific Error Types** - 401, timeout, JSON parsing, network errors
-- **User-Friendly Messages** - Clear status updates and error descriptions
-
-### ✅ **Advanced Features**
-- **Real-Time Data Visualization** - Live histogram updates with dynamic colors
-- **Smart Polling** - Efficient data fetching with change detection
-- **Memory Management** - Automatic cleanup of old data (50 item limit)
-- **Session Persistence** - Automatic login restoration between sessions
-
-### ✅ **Security & Data Protection**
-- **Encrypted Storage** - DPAPI encryption for tokens and history
-- **User-Specific Keys** - Encryption tied to Windows user account
-- **Secure Cleanup** - Proper token and data deletion on logout
-- **JWT Token Management** - Automatic refresh and validation
-
-### ✅ **Professional Development Practices**
-- **Dependency Injection** - Interface-based design for testability
-- **Comprehensive Logging** - Debug logging and error tracking
-- **Clean Architecture** - Separation of concerns with MVVM pattern
-- **Modern C# Features** - Pattern matching, nullable types, async/await
-
-### ✅ **Testing Support**
-- **Unit Testing Ready** - Mock services and DI container
-- **Interface-based Design** - Easy to mock and test components
-- **Testable Architecture** - Constructor injection and loose coupling
-
-### ✅ **Documentation & Polish**
-- **Comprehensive README** - Detailed setup and usage instructions
-- **Code Comments** - Clean, professional code without AI artifacts
-- **Troubleshooting Guide** - Common issues and solutions
-- **Architecture Documentation** - Clear explanation of design patterns
 
 
 ---
