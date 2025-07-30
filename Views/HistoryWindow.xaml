@@ -41,18 +41,60 @@
 
         <!-- Header -->
         <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,15">
-            <StackPanel>
-                <TextBlock Text="📚 Image History" 
-                           FontSize="20" FontWeight="Bold" 
-                           HorizontalAlignment="Center" 
-                           Foreground="#2E7D32"/>
-                <TextBlock x:Name="HistoryCountText"
-                           Text="No history available"
-                           FontSize="14" 
-                           HorizontalAlignment="Center"
-                           Foreground="#666666"
-                           Margin="0,5,0,0"/>
-            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="📚 Image History" 
+                               FontSize="20" FontWeight="Bold" 
+                               HorizontalAlignment="Center" 
+                               Foreground="#2E7D32"/>
+                    <TextBlock x:Name="HistoryCountText"
+                               Text="No history available"
+                               FontSize="14" 
+                               HorizontalAlignment="Center"
+                               Foreground="#666666"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+                
+                <Button Grid.Column="1" 
+                        Content="🗑️ Clear All" 
+                        FontSize="12"
+                        Padding="10,5"
+                        Background="#F5F5F5"
+                        Foreground="#666666"
+                        BorderBrush="#E0E0E0"
+                        BorderThickness="1"
+                        VerticalAlignment="Center"
+                        Click="ClearAllButton_Click">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}" 
+                                                CornerRadius="4"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}">
+                                            <ContentPresenter HorizontalAlignment="Center" 
+                                                            VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#E0E0E0"/>
+                                                <Setter Property="Foreground" Value="#D32F2F"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
         </Border>
 
         <!-- History List -->
@@ -65,6 +107,7 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="200"/>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
                                 <!-- Image -->
@@ -114,6 +157,46 @@
                                         </StackPanel>
                                     </Grid>
                                 </StackPanel>
+
+                                <!-- Delete Button -->
+                                <Button Grid.Column="2" 
+                                        Content="🗑️" 
+                                        FontSize="16"
+                                        Width="40" 
+                                        Height="40"
+                                        Background="#F5F5F5"
+                                        Foreground="#666666"
+                                        BorderBrush="#E0E0E0"
+                                        BorderThickness="1"
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Top"
+                                        HorizontalAlignment="Right"
+                                        Click="DeleteButton_Click"
+                                        Tag="{Binding ImageId}">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="{TemplateBinding Background}" 
+                                                                CornerRadius="20"
+                                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                                BorderThickness="{TemplateBinding BorderThickness}">
+                                                            <ContentPresenter HorizontalAlignment="Center" 
+                                                                            VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Background" Value="#E0E0E0"/>
+                                                                <Setter Property="Foreground" Value="#D32F2F"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
                             </Grid>
                         </Border>
                     </DataTemplate>

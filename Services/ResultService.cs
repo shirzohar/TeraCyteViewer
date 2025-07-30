@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TeraCyteViewer.Models;
@@ -34,7 +33,6 @@ namespace TeraCyteViewer.Services
             {
                 try
                 {
-                    // Ensure we have a valid token
                     if (_authService.IsTokenExpired())
                     {
                         await _authService.RefreshTokenAsync();
@@ -47,14 +45,12 @@ namespace TeraCyteViewer.Services
 
                     if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     {
-                        // Token might be invalid, try to refresh
                         try
                         {
                             await _authService.RefreshTokenAsync();
                             _httpClient.DefaultRequestHeaders.Authorization =
                                 new AuthenticationHeaderValue("Bearer", _authService.GetAccessToken());
                             
-                            // Retry the request
                             response = await _httpClient.GetAsync(ResultUrl);
                         }
                         catch
@@ -104,7 +100,7 @@ namespace TeraCyteViewer.Services
                 }
                 catch (Exception)
                 {
-                    throw; // Re-throw if we've exhausted retries
+                    throw;
                 }
             }
 

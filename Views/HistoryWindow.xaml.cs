@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using TeraCyteViewer.Models;
@@ -10,10 +12,13 @@ namespace TeraCyteViewer.Views
 {
     public partial class HistoryWindow : Window
     {
-        public HistoryWindow(IEnumerable<HistoryItem> historyItems)
+        private ObservableCollection<HistoryItem> _historyCollection;
+
+        public HistoryWindow(ObservableCollection<HistoryItem> historyCollection)
         {
             InitializeComponent();
-            LoadHistory(historyItems);
+            _historyCollection = historyCollection;
+            LoadHistory(historyCollection);
         }
 
         private void LoadHistory(IEnumerable<HistoryItem> historyItems)
@@ -29,6 +34,49 @@ namespace TeraCyteViewer.Views
             else
             {
                 HistoryCountText.Text = "No history available";
+            }
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is string imageId)
+            {
+                var result = MessageBox.Show(
+                    $"Are you sure you want to delete image '{imageId}' from history?",
+                    "Confirm Delete",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    var itemToRemove = _historyCollection.FirstOrDefault(item => item.ImageId == imageId);
+                    if (itemToRemove != null)
+                    {
+                        _historyCollection.Remove(itemToRemove);
+                        LoadHistory(_historyCollection);
+                    }
+                }
+            }
+        }
+
+        private void ClearAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_historyCollection.Count == 0)
+            {
+                MessageBox.Show("History is already empty.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var result = MessageBox.Show(
+                $"Are you sure you want to delete all {_historyCollection.Count} images from history?",
+                "Confirm Clear All",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                _historyCollection.Clear();
+                LoadHistory(_historyCollection);
             }
         }
     }

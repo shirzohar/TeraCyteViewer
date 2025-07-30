@@ -15,6 +15,10 @@ This application connects to the TeraCyte backend to fetch live microscope image
 - **📈 Live Histogram** - Visual representation of 256 intensity values
 - **📚 History View** - Scrollable history of previously seen images
 - **🎨 Color-coded UI** - Visual feedback for different data states
+- **🎯 Smart Classification** - Color-coded results (Green for HEALTH, Red for ANOMALY)
+- **📊 Hierarchical Dashboard** - Optimized layout with results prioritized
+- **🛡️ Robust Error Handling** - Graceful handling of network issues and data delays
+- **📝 Comprehensive Logging** - Detailed error tracking and user feedback
 - **⚡ MVVM Architecture** - Clean separation of concerns
 
 ## 🛠️ Technology Stack
@@ -103,12 +107,28 @@ TeraCyteViewer/
 
 ### Understanding the Display
 
-- **Microscope Image** - Shows the current image with AI detection overlays
-- **Analysis Results** - Displays key metrics:
-  - **Intensity Average** - Average pixel intensity (green)
-  - **Focus Score** - Image focus quality (blue)
-  - **Classification** - AI classification (color-coded)
-- **Intensity Histogram** - Distribution of pixel intensities with random colors for visual feedback
+The application features a **hierarchical dashboard layout** optimized for efficient data viewing:
+
+#### **Top Section (Primary Content)**
+- **🔬 Microscope Image** (40% width) - Shows the current image with AI detection overlays
+- **📊 Analysis Results** (60% width) - Displays comprehensive analysis with scrollable content:
+  - **🎯 Classification** - AI classification with color coding:
+    - 🟢 **Green** for HEALTH/HEALTHY
+    - 🔴 **Red** for ANOMALY
+  - **📋 Image Details** - Quality and processing information
+  - **🎯 Confidence Metrics** - Detection confidence and accuracy
+  - **📡 System Status** - Connection and update status
+
+#### **Bottom Section (Secondary Content)**
+- **📈 Intensity Histogram** (60% width) - Distribution of pixel intensities with random colors
+- **📊 Histogram Statistics** (40% width) - Detailed statistical analysis:
+  - Total Values, Max/Min Values, Average, Median
+  - Non-Zero Count, Standard Deviation
+
+#### **Color Coding System**
+- **HEALTH/HEALTHY** = 🟢 Green (positive)
+- **ANOMALY** = 🔴 Red (negative)
+- **Consistent across main view and history**
 
 ## 🔧 Development
 
@@ -148,16 +168,23 @@ The application follows MVVM best practices:
    - Check internet connection
    - Verify credentials are correct
    - Check if server is accessible
+   - Application will automatically retry authentication
 
 2. **No Data Received**
    - Ensure monitoring is started
    - Check network connectivity
    - Verify API endpoints are working
+   - Application will continue polling with exponential backoff
 
 3. **UI Not Updating**
    - Check data binding in XAML
    - Verify ViewModel properties are updating
    - Ensure commands are properly connected
+
+4. **Network Timeouts**
+   - Application automatically retries failed requests
+   - Check firewall settings
+   - Verify server availability
 
 ### Debug Information
 
@@ -167,22 +194,24 @@ The application provides real-time status messages:
 - ❌ Error messages (red)
 - 🔄 Info messages (blue)
 
+### Error Recovery Features
+
+- **Automatic Retry** - Failed requests are retried up to 3 times
+- **Token Refresh** - Authentication tokens are automatically refreshed
+- **Graceful Degradation** - Application continues running even with network issues
+- **User Feedback** - Clear status messages for all error conditions
+
 ## 📈 Performance
 
 - **Polling Interval** - 5 seconds between data fetches
 - **Token Refresh** - Automatic refresh 1 minute before expiry
 - **History Limit** - Maximum 50 items to prevent memory issues
 - **Error Handling** - Exponential backoff for failed requests
+- **UI Responsiveness** - Optimized layout with prioritized content areas
+- **Memory Management** - Efficient image handling and data binding
+- **Network Resilience** - Retry mechanism with 3 attempts and 2-second delays
+- **Timeout Protection** - 15-second timeout for all HTTP requests
 
-## 🔮 Future Enhancements
-
-- [ ] Unit tests and integration tests
-- [ ] Configuration file for settings
-- [ ] Advanced error handling and logging
-- [ ] Export functionality for data
-- [ ] Customizable polling intervals
-- [ ] Multiple image view modes
-- [ ] Real-time alerts and notifications
 
 ## 📄 License
 

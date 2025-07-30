@@ -1,0 +1,29 @@
+2025-07-29 23:13:13.521 +03:00 [Information] Starting data polling loop
+2025-07-29 23:13:13.741 +03:00 [Error] Data polling failed: Token refresh failed: ServiceUnavailable - {"detail":"Token refresh service temporarily unavailable"}
+System.Exception: Token refresh failed: ServiceUnavailable - {"detail":"Token refresh service temporarily unavailable"}
+   at TeraCyteViewer.Services.AuthService.RefreshTokenAsync() in C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\Services\AuthService.cs:line 97
+   at TeraCyteViewer.ViewModels.MainViewModel.PollLoop() in C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\ViewModels\MainViewModel.cs:line 126
+2025-07-29 23:13:23.948 +03:00 [Error] Data polling failed: Token refresh failed: ServiceUnavailable - {"detail":"Token refresh service temporarily unavailable"}
+System.Exception: Token refresh failed: ServiceUnavailable - {"detail":"Token refresh service temporarily unavailable"}
+   at TeraCyteViewer.Services.AuthService.RefreshTokenAsync() in C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\Services\AuthService.cs:line 97
+   at TeraCyteViewer.ViewModels.MainViewModel.PollLoop() in C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\ViewModels\MainViewModel.cs:line 126
+2025-07-29 23:13:36.235 +03:00 [Error] Data polling failed: Token refresh failed: ServiceUnavailable - {"detail":"Token refresh service temporarily unavailable"}
+System.Exception: Token refresh failed: ServiceUnavailable - {"detail":"Token refresh service temporarily unavailable"}
+   at TeraCyteViewer.Services.AuthService.RefreshTokenAsync() in C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\Services\AuthService.cs:line 97
+   at TeraCyteViewer.ViewModels.MainViewModel.PollLoop() in C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\ViewModels\MainViewModel.cs:line 126
+2025-07-29 23:13:39.229 +03:00 [Information] Starting data polling loop
+2025-07-29 23:13:40.951 +03:00 [Error] Data polling failed: 'ResultsContainer' name cannot be found in the name scope of 'TeraCyteViewer.MainWindow'.
+System.InvalidOperationException: 'ResultsContainer' name cannot be found in the name scope of 'TeraCyteViewer.MainWindow'.
+   at System.Windows.Media.Animation.Storyboard.ResolveTargetName(String targetName, INameScope nameScope, DependencyObject element)
+   at System.Windows.Media.Animation.Storyboard.ClockTreeWalkRecursive(Clock currentClock, DependencyObject containingObject, INameScope nameScope, DependencyObject parentObject, String parentObjectName, PropertyPath parentPropertyPath, HandoffBehavior handoffBehavior, HybridDictionary clockMappings, Int64 layer)
+   at System.Windows.Media.Animation.Storyboard.ClockTreeWalkRecursive(Clock currentClock, DependencyObject containingObject, INameScope nameScope, DependencyObject parentObject, String parentObjectName, PropertyPath parentPropertyPath, HandoffBehavior handoffBehavior, HybridDictionary clockMappings, Int64 layer)
+   at System.Windows.Media.Animation.Storyboard.BeginCommon(DependencyObject containingObject, INameScope nameScope, HandoffBehavior handoffBehavior, Boolean isControllable, Int64 layer)
+   at System.Windows.Media.Animation.Storyboard.Begin()
+   at TeraCyteViewer.MainWindow.TriggerResultsPulseAnimation() in C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\MainWindow.xaml.cs:line 77
+   at TeraCyteViewer.MainWindow.ViewModel_PropertyChanged(Object sender, PropertyChangedEventArgs e) in C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\MainWindow.xaml.cs:line 47
+   at TeraCyteViewer.ViewModels.BaseViewModel.OnPropertyChanged(String propertyName) in C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\ViewModels\BaseViewModel.cs:line 13
+   at TeraCyteViewer.ViewModels.BaseViewModel.SetProperty[T](T& field, T value, String propertyName) in C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\ViewModels\BaseViewModel.cs:line 22
+   at TeraCyteViewer.ViewModels.MainViewModel.set_ShowIntensityNewIndicator(Boolean value) in C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\ViewModels\MainViewModel.cs:line 515
+   at TeraCyteViewer.ViewModels.MainViewModel.TriggerNewDataVisualCues() in C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\ViewModels\MainViewModel.cs:line 233
+   at TeraCyteViewer.ViewModels.MainViewModel.UpdateUI(ImageData imageData, ResultData result) in C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\ViewModels\MainViewModel.cs:line 219
+   at TeraCyteViewer.ViewModels.MainViewModel.PollLoop() in C:\Users\shir3\OneDrive\שולחן העבודה\TeraCyteViewer\TeraCyteViewer\ViewModels\MainViewModel.cs:line 157

@@ -99,16 +99,18 @@
             </DoubleAnimation>
         </Storyboard>
         
-        <!-- Pulse animation for new results -->
+        <!-- Pulse animation for results -->
         <Storyboard x:Key="ResultsPulseAnimation">
-            <DoubleAnimation Storyboard.TargetName="ResultsContainer"
+            <DoubleAnimation Storyboard.TargetName="ResultsSection"
                              Storyboard.TargetProperty="Opacity"
-                             From="0.9" To="1" Duration="0:0:0.4" AutoReverse="True" RepeatBehavior="1x">
+                             From="1" To="0.7" Duration="0:0:0.3" AutoReverse="True" RepeatBehavior="2x">
                 <DoubleAnimation.EasingFunction>
                     <CubicEase EasingMode="EaseInOut"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
         </Storyboard>
+        
+
         
         <!-- Glow effect for new data -->
         <Storyboard x:Key="GlowAnimation">
@@ -295,6 +297,7 @@
                 
                 <!-- Analysis Results Section -->
                 <Border Grid.Column="1"
+                        x:Name="ResultsSection"
                         Background="White" 
                         CornerRadius="8" 
                         Padding="10" 
@@ -365,7 +368,7 @@
                                             <TextBlock Text="Image Quality" 
                                                        FontSize="11" 
                                                        Foreground="#666666"/>
-                                            <TextBlock Text="High Resolution" 
+                                            <TextBlock Text="{Binding ImageQuality}" 
                                                        FontSize="14" 
                                                        FontWeight="Bold"
                                                        Foreground="#4CAF50"/>
@@ -375,10 +378,48 @@
                                             <TextBlock Text="Processing Time" 
                                                        FontSize="11" 
                                                        Foreground="#666666"/>
-                                            <TextBlock Text="~2.3s" 
+                                            <TextBlock Text="{Binding ProcessingTime}" 
                                                        FontSize="14" 
                                                        FontWeight="Bold"
                                                        Foreground="#FF9800"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- Analysis Metrics -->
+                            <Border Background="#F8F9FA" CornerRadius="6" Padding="12" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="📊 Analysis Metrics" 
+                                               FontSize="14" 
+                                               FontWeight="SemiBold"
+                                               Foreground="#1976D2"
+                                               Margin="0,0,0,10"/>
+                                    
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                            <TextBlock Text="Focus Score" 
+                                                       FontSize="11" 
+                                                       Foreground="#666666"/>
+                                            <TextBlock Text="{Binding FocusScore, StringFormat='{}{0:F2}'}" 
+                                                       FontSize="14" 
+                                                       FontWeight="Bold"
+                                                       Foreground="#9C27B0"/>
+                                        </StackPanel>
+                                        
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="Intensity Average" 
+                                                       FontSize="11" 
+                                                       Foreground="#666666"/>
+                                            <TextBlock Text="{Binding IntensityAverage, StringFormat='{}{0:F2}'}" 
+                                                       FontSize="14" 
+                                                       FontWeight="Bold"
+                                                       Foreground="#FF5722"/>
                                         </StackPanel>
                                     </Grid>
                                 </StackPanel>
@@ -403,7 +444,7 @@
                                             <TextBlock Text="Detection Confidence" 
                                                        FontSize="11" 
                                                        Foreground="#666666"/>
-                                            <TextBlock Text="95.2%" 
+                                            <TextBlock Text="{Binding DetectionConfidence}" 
                                                        FontSize="14" 
                                                        FontWeight="Bold"
                                                        Foreground="#2E7D32"/>
@@ -411,11 +452,11 @@
                                         
                                         <StackPanel Grid.Column="1">
                                             <TextBlock Text="Analysis Accuracy" 
-                                               FontSize="11" 
-                                               Foreground="#666666"/>
-                                            <TextBlock Text="98.7%" 
-                                               FontSize="14" FontWeight="Bold"
-                                               Foreground="#1976D2"/>
+                                                FontSize="11" 
+                                                Foreground="#666666"/>
+                                            <TextBlock Text="{Binding AnalysisAccuracy}" 
+                                                FontSize="14" FontWeight="Bold"
+                                                Foreground="#1976D2"/>
                                         </StackPanel>
                                     </Grid>
                                 </StackPanel>
@@ -440,7 +481,7 @@
                                             <TextBlock Text="Connection" 
                                                        FontSize="11" 
                                                        Foreground="#666666"/>
-                                            <TextBlock Text="Connected" 
+                                            <TextBlock Text="{Binding ConnectionStatus}" 
                                                        FontSize="14" 
                                                        FontWeight="Bold"
                                                        Foreground="#4CAF50"/>
@@ -450,7 +491,7 @@
                                             <TextBlock Text="Last Update" 
                                                        FontSize="11" 
                                                        Foreground="#666666"/>
-                                            <TextBlock Text="2 min ago" 
+                                            <TextBlock Text="{Binding LastUpdateTime, StringFormat='{}{0:mm\\:ss} ago'}" 
                                                        FontSize="14" 
                                                        FontWeight="Bold"
                                                Foreground="#FF9800"/>

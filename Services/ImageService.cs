@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Newtonsoft.Json;
@@ -35,7 +34,6 @@ namespace TeraCyteViewer.Services
             {
                 try
                 {
-                    // Ensure we have a valid token
                     if (_authService.IsTokenExpired())
                     {
                         await _authService.RefreshTokenAsync();
@@ -48,14 +46,12 @@ namespace TeraCyteViewer.Services
 
                     if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     {
-                        // Token might be invalid, try to refresh
                         try
                         {
                             await _authService.RefreshTokenAsync();
                             _httpClient.DefaultRequestHeaders.Authorization =
                                 new AuthenticationHeaderValue("Bearer", _authService.GetAccessToken());
                             
-                            // Retry the request
                             response = await _httpClient.GetAsync(ImageUrl);
                         }
                         catch
@@ -110,7 +106,7 @@ namespace TeraCyteViewer.Services
                 }
                 catch (Exception)
                 {
-                    throw; // Re-throw if we've exhausted retries
+                    throw;
                 }
             }
 
@@ -121,36 +117,36 @@ namespace TeraCyteViewer.Services
         {
             try
             {
-                byte[] binaryData = Convert.FromBase64String(base64);
+                var imageBytes = Convert.FromBase64String(base64);
                 var image = new BitmapImage();
-
-                using (var stream = new System.IO.MemoryStream(binaryData))
+                
+                using (var stream = new System.IO.MemoryStream(imageBytes))
                 {
                     image.BeginInit();
                     image.CacheOption = BitmapCacheOption.OnLoad;
                     image.StreamSource = stream;
                     image.EndInit();
-                    image.Freeze();
                 }
-
+                
+                image.Freeze();
                 return image;
             }
             catch (Exception ex)
             {
-                throw new Exception($"Failed to decode image data: {ex.Message}");
+                throw new Exception($"Failed to convert base64 to image: {ex.Message}");
             }
         }
 
         private class ImageApiResponse
         {
             [JsonProperty("image_id")]
-            public string? ImageId { get; set; }
+            public string ImageId { get; set; } = string.Empty;
 
             [JsonProperty("timestamp")]
             public DateTime Timestamp { get; set; }
 
             [JsonProperty("image_data_base64")]
-            public string? ImageDataBase64 { get; set; }
+            public string ImageDataBase64 { get; set; } = string.Empty;
         }
     }
 }

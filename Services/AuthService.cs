@@ -9,11 +9,16 @@ namespace TeraCyteViewer.Services
 {
     public class AuthService
     {
+        private readonly HttpClient httpClient;
         private static readonly string loginUrl = "https://teracyte-assignment-server-764836180308.us-central1.run.app/api/auth/login";
         private static readonly string refreshUrl = "https://teracyte-assignment-server-764836180308.us-central1.run.app/api/auth/refresh";
-        private static readonly HttpClient httpClient = new HttpClient();
 
         public AuthState AuthState { get; private set; } = new AuthState();
+
+        public AuthService()
+        {
+            httpClient = new HttpClient();
+        }
 
         public async Task<LoginResponse> LoginAsync(string username, string password)
         {
@@ -44,31 +49,19 @@ namespace TeraCyteViewer.Services
                     throw new Exception("Failed to deserialize login response");
                 }
 
-                if (string.IsNullOrEmpty(loginResponse.AccessToken) || string.IsNullOrEmpty(loginResponse.RefreshToken))
-                {
-                    throw new Exception("Invalid tokens received from server");
-                }
-
                 AuthState = new AuthState
                 {
                     AccessToken = loginResponse.AccessToken,
                     RefreshToken = loginResponse.RefreshToken,
-                    Expiration = DateTime.UtcNow.AddSeconds(loginResponse.ExpiresIn - 60) // Refresh 1 minute before expiry
+                    Expiration = DateTime.UtcNow.AddSeconds(loginResponse.ExpiresIn - 60),
+                    RefreshTokenExpiration = DateTime.UtcNow.AddDays(30)
                 };
 
                 return loginResponse;
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
-                throw new Exception($"Network error during login: {ex.Message}");
-            }
-            catch (TaskCanceledException)
-            {
-                throw new Exception("Login request timed out");
-            }
-            catch (JsonException ex)
-            {
-                throw new Exception($"Invalid response format: {ex.Message}");
+                throw new Exception($"Login error: {ex.Message}");
             }
         }
 
@@ -81,16 +74,12 @@ namespace TeraCyteViewer.Services
                     throw new Exception("No refresh token available.");
                 }
 
-                var refreshRequest = new
-                {
-                    refresh_token = AuthState.RefreshToken
-                };
-
+                var refreshRequest = new { refresh_token = AuthState.RefreshToken };
                 var json = JsonConvert.SerializeObject(refreshRequest);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await httpClient.PostAsync(refreshUrl, content);
-                
+
                 if (!response.IsSuccessStatusCode)
                 {
                     var errorContent = await response.Content.ReadAsStringAsync();
@@ -98,48 +87,29 @@ namespace TeraCyteViewer.Services
                 }
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
+                var refreshResponse = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
 
-                if (loginResponse == null)
+                if (refreshResponse == null)
                 {
                     throw new Exception("Failed to deserialize refresh response");
                 }
 
-                if (string.IsNullOrEmpty(loginResponse.AccessToken) || string.IsNullOrEmpty(loginResponse.RefreshToken))
-                {
-                    throw new Exception("Invalid tokens received during refresh");
-                }
-
-                AuthState = new AuthState
-                {
-                    AccessToken = loginResponse.AccessToken,
-                    RefreshToken = loginResponse.RefreshToken,
-                    Expiration = DateTime.UtcNow.AddSeconds(loginResponse.ExpiresIn - 60)
-                };
+                AuthState.AccessToken = refreshResponse.AccessToken;
+                AuthState.RefreshToken = refreshResponse.RefreshToken;
+                AuthState.Expiration = DateTime.UtcNow.AddSeconds(refreshResponse.ExpiresIn - 60);
+                AuthState.RefreshTokenExpiration = DateTime.UtcNow.AddDays(30);
 
                 return true;
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
-                throw new Exception($"Network error during token refresh: {ex.Message}");
-            }
-            catch (TaskCanceledException)
-            {
-                throw new Exception("Token refresh request timed out");
-            }
-            catch (JsonException ex)
-            {
-                throw new Exception($"Invalid refresh response format: {ex.Message}");
+                throw new Exception($"Token refresh error: {ex.Message}");
             }
         }
 
         public string GetAccessToken()
         {
-            if (string.IsNullOrEmpty(AuthState.AccessToken))
-            {
-                throw new Exception("No access token available");
-            }
-            return AuthState.AccessToken;
+            return AuthState.AccessToken ?? string.Empty;
         }
 
         public bool IsTokenExpired()
@@ -147,14 +117,9 @@ namespace TeraCyteViewer.Services
             return AuthState.IsExpired;
         }
 
-        public bool IsAuthenticated()
+        public bool IsRefreshTokenExpired()
         {
-            return !string.IsNullOrEmpty(AuthState.AccessToken) && !AuthState.IsExpired;
-        }
-
-        public void ClearAuthState()
-        {
-            AuthState = new AuthState();
+            return AuthState.IsRefreshTokenExpired;
         }
     }
 }
