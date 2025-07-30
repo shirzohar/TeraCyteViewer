@@ -267,36 +267,7 @@ The application uses the following TeraCyte API endpoints:
 
 
 
-## 🧪 Testing
 
-### Testing Architecture Support
-The application is designed with testing in mind through:
-
-**Dependency Injection:**
-- All services implement interfaces for easy mocking
-- Constructor injection enables unit testing
-- DI container configuration is centralized
-
-**Testable Design:**
-- Separation of concerns with MVVM pattern
-- Services are loosely coupled
-- Business logic is isolated in ViewModels
-
-**Example Test Setup (Theoretical):**
-```csharp
-// Example of how tests could be written
-var mockAuthService = new Mock<IAuthService>();
-var mockImageService = new Mock<IImageService>();
-var mockResultService = new Mock<IResultService>();
-
-var viewModel = new MainViewModel(
-    mockAuthService.Object,
-    mockImageService.Object,
-    mockResultService.Object
-);
-```
-
-**Note:** While the architecture supports comprehensive testing, actual test files are not included in this assignment submission.
 
 
 
